@@ -1,5 +1,6 @@
 var createError = require('http-errors');
 var express = require('express');
+const loginRouter = require('./routes/loginRouter');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
@@ -9,6 +10,7 @@ var indexRouter = require('./routes/index');
 const hospitalRouter = require('./routes/hospitalRouter');
 const ventilatorRouter = require('./routes/ventilatorRouter');
 
+const middleware = require('./middleware');
 const mongoose = require('mongoose');
 
 const url = 'mongodb://localhost:27017/hospitalManagement';
@@ -34,9 +36,10 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', indexRouter);
-app.use('/hospitals', hospitalRouter);
-app.use('/ventilators', ventilatorRouter);
+app.use('/login', loginRouter);
+app.use('/', middleware.checkToken, indexRouter);
+app.use('/hospitals', middleware.checkToken, hospitalRouter);
+app.use('/ventilators', middleware.checkToken, ventilatorRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
