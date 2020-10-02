@@ -1,23 +1,31 @@
-const mongoose = require('mongoose');
-
+const express = require('express');
 const Users = require('./models/users');
 
-const url = 'mongodb://localhost:27017/hospitalManagement';
-const connect = mongoose.connect(url, {
-  useNewUrlParser: true,
-  useFindAndModify: true,
-  useUnifiedTopology: true
-});
+const registerRouter = express.Router();
 
-connect.then(db => {
-    Users.create({
-        username: "admin",
-        firstname: "akash",
-        lastname: "konda",
-        email: "aksh.konda@gmail.com",
-        password: "Kmit123$"
-    }).then(resp => {
-        console.log("User Created Successfully!");
-        console.log({ user: resp });
+registerRouter.route('/')
+    .post((req, res, next) => {
+        const newUser = {
+            username: req.body.username,
+            firstname: req.body.firstname,
+            lastname: req.body.lastname,
+            email: req.body.email,
+            password: password
+        }
+
+        Users.findOne({ username: newUser.username })
+            .then(user => {
+                if(!!user) {
+                    const err = new Error("User Already Exists!");
+                }
+            })
+
+        Users.create(newUser)
+            .then(user => {
+                console.log("User Created Successfully!");
+                console.log({ "user": user });
+                res.statusCode = 200;
+                res.end("User creation successful!");
+            })
+            .catch(err => next(err));
     });
-});

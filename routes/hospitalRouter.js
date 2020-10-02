@@ -34,7 +34,7 @@ hospitalRouter.route('/')
 .delete((req, res, next) => {
     Hospitals.deleteMany({})
     .then(resp => {
-        res.statusCode = 200;
+        res.statusCode = 204;
         res.setHeader('Content-Type', 'application/json');
         res.json(resp);
     }, err => next(err))
@@ -70,7 +70,7 @@ hospitalRouter.route('/:hId')
 .delete((req, res, next) => {
     Hospitals.findOneAndDelete({hId: req.params.hId})
     .then(resp => {
-        res.statusCode = 200;
+        res.statusCode = 204;
         res.setHeader('Content-Type', 'application/json');
         res.json(resp);
     }, err => next(err))

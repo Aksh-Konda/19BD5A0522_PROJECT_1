@@ -34,7 +34,7 @@ ventilatorRouter.route('/')
 .delete((req, res, next) => {
     Ventilators.deleteMany({})
     .then(resp => {
-        res.statusCode = 200;
+        res.statusCode = 204;
         res.setHeader('Content-Type', 'application/json');
         res.json(resp);
     }, err => next(err))
@@ -70,7 +70,7 @@ ventilatorRouter.route('/:ventilatorId')
 .delete((req, res, next) => {
     Ventilators.findOneAndDelete({ ventilatorId: req.params.ventilatorId })
     .then(resp => {
-        res.statusCode = 200;
+        res.statusCode = 204;
         res.setHeader('Content-Type', 'application/json');
         res.json(resp);
     }, err => next(err))

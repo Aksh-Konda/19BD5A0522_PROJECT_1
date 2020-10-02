@@ -1,6 +1,5 @@
 var createError = require('http-errors');
 var express = require('express');
-const loginRouter = require('./routes/loginRouter');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
@@ -11,6 +10,7 @@ const hospitalRouter = require('./routes/hospitalRouter');
 const ventilatorRouter = require('./routes/ventilatorRouter');
 
 const middleware = require('./middleware');
+
 const mongoose = require('mongoose');
 
 const url = 'mongodb://localhost:27017/hospitalManagement';
@@ -30,13 +30,13 @@ var app = express();
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
-app.use(logger('dev'));
+logger.token('baseUrl', function (req, res) { return req.headers['host'] });
+app.use(logger(`:method :baseUrl:url :status :res[content-length] - :response-time ms`));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/login', loginRouter);
 app.use('/', middleware.checkToken, indexRouter);
 app.use('/hospitals', middleware.checkToken, hospitalRouter);
 app.use('/ventilators', middleware.checkToken, ventilatorRouter);
