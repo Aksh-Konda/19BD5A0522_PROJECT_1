@@ -1,11 +1,8 @@
 const express = require('express');
-const bodyParser = require('body-parser');
 
 const Ventilators = require('../models/ventilators');
 
 const ventilatorRouter = express.Router();
-
-ventilatorRouter.use(bodyParser.json());
 
 ventilatorRouter.route('/')
 .get((req,res,next) => {
@@ -27,19 +24,6 @@ ventilatorRouter.route('/')
     }, err => next(err))
     .catch(err => next(err));
 })
-.put((req, res, next) => {
-    res.statusCode = 403;
-    res.end('PUT operation not supported on /ventilators');
-})
-.delete((req, res, next) => {
-    Ventilators.deleteMany({})
-    .then(resp => {
-        res.statusCode = 204;
-        res.setHeader('Content-Type', 'application/json');
-        res.json(resp);
-    }, err => next(err))
-    .catch(err => next(err));
-});
 
 ventilatorRouter.route('/:ventilatorId')
 .get((req, res, next) => {
@@ -50,10 +34,6 @@ ventilatorRouter.route('/:ventilatorId')
         res.json(ventilator);
     }, err => next(err))
     .catch(err => next(err));
-})
-.post((req, res, next) => {
-    res.statusCode = 403;
-    res.end('POST operation not supported on /ventilators/' + req.params.ventilatorId);
 })
 .put((req, res, next) => {
     Ventilators.findOneAndUpdate({ ventilatorId: req.params.ventilatorId }, {
@@ -67,19 +47,21 @@ ventilatorRouter.route('/:ventilatorId')
     }, err => next(err))
     .catch(err => next(err));
 })
-.delete((req, res, next) => {
-    Ventilators.findOneAndDelete({ ventilatorId: req.params.ventilatorId })
-    .then(resp => {
-        res.statusCode = 204;
+
+ventilatorRouter.route('/byStatus/:status')
+.get((req, res, next) => {
+    Ventilators.find({ status: req.params.status})
+    .then(ventilators => {
+        res.statusCode = 200;
         res.setHeader('Content-Type', 'application/json');
-        res.json(resp);
+        res.json(ventilators);
     }, err => next(err))
     .catch(err => next(err));
 });
 
-ventilatorRouter.route('/status/:status')
+ventilatorRouter.route('/byName/:name')
 .get((req, res, next) => {
-    Ventilators.find({ status: req.params.status})
+    Ventilators.find({ name: { $regex: req.params.name, $options: "i" } })
     .then(ventilators => {
         res.statusCode = 200;
         res.setHeader('Content-Type', 'application/json');
