@@ -47,6 +47,16 @@ ventilatorRouter.route('/:ventilatorId')
     }, err => next(err))
     .catch(err => next(err));
 })
+.delete((req, res, next) => {
+    Ventilators.findOneAndDelete({ ventilatorId: req.params.ventilatorId })
+    .then(resp => {
+        console.log('Ventilator updated:', resp);
+        res.statusCode = 204;
+        res.setHeader('Content-Type', 'application/json');
+        res.json(resp);
+    }, err => next(err))
+    .catch(err => next(err));
+})
 
 ventilatorRouter.route('/byStatus/:status')
 .get((req, res, next) => {
@@ -62,6 +72,17 @@ ventilatorRouter.route('/byStatus/:status')
 ventilatorRouter.route('/byName/:name')
 .get((req, res, next) => {
     Ventilators.find({ name: { $regex: req.params.name, $options: "i" } })
+    .then(ventilators => {
+        res.statusCode = 200;
+        res.setHeader('Content-Type', 'application/json');
+        res.json(ventilators);
+    }, err => next(err))
+    .catch(err => next(err));
+});
+
+ventilatorRouter.route('/byHid/:hId')
+.get((req, res, next) => {
+    Ventilators.find({ hId: { $regex: req.params.hId, $options: "i" } })
     .then(ventilators => {
         res.statusCode = 200;
         res.setHeader('Content-Type', 'application/json');
