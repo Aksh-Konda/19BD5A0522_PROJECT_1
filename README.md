@@ -21,7 +21,7 @@ Install the dependencies and devDependencies and start the server.
 ```sh
 $ cd HospitalServer
 $ npm install
-$ npm start
+$ npm run start:all
 ```
 
 ## Routes
@@ -32,10 +32,9 @@ $ npm start
 | ------ | ------ | ------ |
 | /hospitals | GET | gets all the hospitals |
 | /hospitals | POST | Adds new hospital |
-| /hospitals | DELETE | deletes all the hospitals |
 | /hospitals/{Id} | GET | gets the hospital with hId equal to Id |
 | /hospitals/{Id} | PUT | Updates Hospital with hId equal to Id with the content sent in the body |
-| /hospitals/{Id} | DELETE | deletes the hospital with hId equal to Id |
+| /hospitals/byName/{name} | GET | gets the hospitals with the name containing the name sent in the URL |
 
 ### /ventilators route
 
@@ -43,8 +42,7 @@ $ npm start
 | ------ | ------ | ------ |
 | /ventilators | GET | gets all the ventilators |
 | /ventilators | POST | Adds new ventilator |
-| /ventilators | DELETE | deletes all the ventilators |
 | /ventilators/{Id} | GET | gets the ventilator with ventilatorId equal to Id |
 | /ventilators/{Id} | PUT | Updates ventilator with ventilatorId equal to Id with the content sent in the body |
-| /ventilators/{Id} | DELETE | deletes the ventilator with ventilatorId equal to Id |
-| /ventilators/status/{status} | GET | gets the ventilator with status equal to status requested for in the URL |
+| /ventilators/byName/{name} | GET | gets the ventilator with name containing the name requested for in the URL |
+| /ventilators/byStatus/{status} | GET | gets the ventilator with status equal to status requested for in the URL |
